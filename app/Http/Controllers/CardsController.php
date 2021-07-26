@@ -10,13 +10,7 @@ class CardsController extends Controller
 {
     public function index()
     {
-        //$cards = auth()->user()->columns()->with('cards')->get();
-        $id = 1;
-        $columns = Columns::find($id)->with('cards')->get();
-     
-        //$columns = Columns::find($id)->all();
-
-        //echo($columns);
+        $columns = Columns::with('cards')->get();
 
         return view('cards.index', compact('columns'));
     }

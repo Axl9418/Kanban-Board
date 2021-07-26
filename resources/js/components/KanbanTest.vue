@@ -20,6 +20,14 @@
     <div class="row mt-5">
       <div v-for="column in columns" :key="column.slug" class="col-3">
         <div class="p-2 alert alert-primary">
+          <form @submit.prevent="handleDeleteColumn(column.id)">
+            <div>            
+                <button class="">
+                    Delete Column
+                </button>            
+            </div>
+          </form>
+
           <h3>{{ column.title }}</h3>
 
           <button class="" @click="openAddCard(column.id)">
@@ -125,6 +133,20 @@ export default {
       .then(res => {
           // Tell the component we've added a new column and include it
           this.columns.push(res.data);
+        })
+      .catch(err => {
+        console.log(err.response);
+      });
+    },
+    handleDeleteColumn(columnId) {
+      axios.delete("/kanban-board/public/columns/del/" + columnId)
+      .then(res => {
+          if(res.data) {
+            //To investigate if splice is in the vuejs limitations
+            this.columns.splice((columnId -1), 1);         
+             
+             location.reload();
+          }
         })
       .catch(err => {
         console.log(err.response);

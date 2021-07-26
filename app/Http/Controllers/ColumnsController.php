@@ -21,6 +21,22 @@ class ColumnsController extends Controller
         $column->slug = $request->input('slug');
 
         return Columns::create(['title' => $column->title, 'slug' => $column->slug]);
+    }
+
+    public function destroy(Request $request)
+    {
+        $column = new Columns();
+
+        $column->id = $request->id;
+
+        $column_delete = Columns::find($column->id);
+
+        //Delete cards of this column
+        Cards::where('columns_id', '=' , $column_delete->id)->delete();
+        
+        //delete column
+        return $column_delete->delete();
+
 
     }
 }
