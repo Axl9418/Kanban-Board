@@ -2,7 +2,19 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col form-inline">
-        <!--Aqui va el buton de agregar-->
+        <form @submit.prevent="handleAddNewColumn">
+          <div>
+            <input class="" type="text" placeholder="Enter a title" v-model.trim="newColumn.title">
+            <button class="">
+                Add Column
+            </button>
+            <div v-show="errorMessage">
+              <span class="">
+                {{ errorMessage }}
+              </span>
+            </div>            
+          </div>
+        </form>
       </div>
     </div>
     <div class="row mt-5">
@@ -54,7 +66,12 @@ export default {
   data() {
     return {
         columns: [],
-        newCardForColumn: 0 // track the ID of the column we want to add to
+        newCardForColumn: 0, // track the ID of the column we want to add to
+        newColumn: {
+          title: "",
+          slug: ""
+        },
+        errorMessage: ""
     };
   },
   mounted() {
@@ -81,7 +98,6 @@ export default {
     // add a card to the correct column in our list
     handleCardAdded(newCard) {
       // Find the index of the column where we should add the card
-      console.log("New Card: " + newCard);
       const columnIndex = this.columns.findIndex(
         column => column.id === newCard.columns_id
       );
@@ -92,12 +108,28 @@ export default {
       // Reset and close the AddTaskForm
       this.closeAddCard();
     },
-        handleCardMoved() {
+    handleCardMoved() {
       // Send the entire list of columns to the server
       axios.put("/kanban-board/public/cards/sync", {columns: this.columns}).catch(err => {
         console.log(err.response);
       });
     },
+    handleAddNewColumn(){
+      // Basic validation so we don't send an empty column to the server
+      if (!this.newColumn.title) {
+        this.errorMessage = "The title field is required";
+        return;
+      }
+      this.newColumn.slug = this.newColumn.title.toLowerCase();
+      axios.post("/kanban-board/public/columns", this.newColumn)
+      .then(res => {
+          // Tell the component we've added a new column and include it
+          this.columns.push(res.data);
+        })
+      .catch(err => {
+        console.log(err.response);
+      });
+    }
   }
 };
 </script>

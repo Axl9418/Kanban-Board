@@ -48,15 +48,6 @@ class CardsController extends Controller
     //Update cards location
     public function sync(Request $request)
     {
-        //echo("Lo que llega: " . $request);
-
-        /*$this->validate(request(), [
-            'columns' => ['required', 'array']
-        ]);*/
-
-        //echo("Paso validate");
-        //print_r($request->columns);
-
         foreach ($request->columns as $column) {
             foreach ($column['cards'] as $i => $card) {
                 $state = $i + 1;

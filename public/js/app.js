@@ -1890,9 +1890,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     columnId: Number
@@ -1919,11 +1916,9 @@ __webpack_require__.r(__webpack_exports__);
       if (!this.newCard.title) {
         this.errorMessage = "The title field is required";
         return;
-      }
+      } // Send new card to server
 
-      console.log("New Card:" + this.newCard); // Send new card to server
 
-      console.log("ENtro a res: " + this.newCard.title);
       axios.post("/kanban-board/public/cards", this.newCard).then(function (res) {
         // Tell the parent component we've added a new card and include it
         console.log(res.data);
@@ -2011,6 +2006,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //import draggable
 
  // import the AddCard component
@@ -2028,8 +2035,13 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       columns: [],
-      newCardForColumn: 0 // track the ID of the column we want to add to
-
+      newCardForColumn: 0,
+      // track the ID of the column we want to add to
+      newColumn: {
+        title: "",
+        slug: ""
+      },
+      errorMessage: ""
     };
   },
   mounted: function mounted() {
@@ -2056,7 +2068,6 @@ __webpack_require__.r(__webpack_exports__);
     // add a card to the correct column in our list
     handleCardAdded: function handleCardAdded(newCard) {
       // Find the index of the column where we should add the card
-      console.log("New Card: " + newCard);
       var columnIndex = this.columns.findIndex(function (column) {
         return column.id === newCard.columns_id;
       }); // Add newly created card to our column
@@ -2069,6 +2080,23 @@ __webpack_require__.r(__webpack_exports__);
       // Send the entire list of columns to the server
       axios.put("/kanban-board/public/cards/sync", {
         columns: this.columns
+      })["catch"](function (err) {
+        console.log(err.response);
+      });
+    },
+    handleAddNewColumn: function handleAddNewColumn() {
+      var _this = this;
+
+      // Basic validation so we don't send an empty column to the server
+      if (!this.newColumn.title) {
+        this.errorMessage = "The title field is required";
+        return;
+      }
+
+      this.newColumn.slug = this.newColumn.title.toLowerCase();
+      axios.post("/kanban-board/public/columns", this.newColumn).then(function (res) {
+        // Tell the component we've added a new column and include it
+        _this.columns.push(res.data);
       })["catch"](function (err) {
         console.log(err.response);
       });
@@ -6623,7 +6651,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* light stylings for the kanban columns */\n.kanban-column {\r\n  min-height: 300px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/* light stylings for the kanban columns */\n.kanban-column {\r\n  min-height: 300px;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -41976,7 +42004,76 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container mt-5" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col form-inline" }, [
+        _c(
+          "form",
+          {
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.handleAddNewColumn.apply(null, arguments)
+              }
+            }
+          },
+          [
+            _c("div", [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.trim",
+                    value: _vm.newColumn.title,
+                    expression: "newColumn.title",
+                    modifiers: { trim: true }
+                  }
+                ],
+                attrs: { type: "text", placeholder: "Enter a title" },
+                domProps: { value: _vm.newColumn.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.newColumn, "title", $event.target.value.trim())
+                  },
+                  blur: function($event) {
+                    return _vm.$forceUpdate()
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("button", {}, [
+                _vm._v("\n              Add Column\n          ")
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.errorMessage,
+                      expression: "errorMessage"
+                    }
+                  ]
+                },
+                [
+                  _c("span", {}, [
+                    _vm._v(
+                      "\n              " +
+                        _vm._s(_vm.errorMessage) +
+                        "\n            "
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      ])
+    ]),
     _vm._v(" "),
     _c(
       "div",
@@ -42051,16 +42148,7 @@ var render = function() {
     )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col form-inline" })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

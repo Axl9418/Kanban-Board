@@ -1,8 +1,5 @@
 <template>
-  <form
-    class=""
-    @submit.prevent="handleAddNewCard"
-  >
+  <form @submit.prevent="handleAddNewCard">
   
     <div class="">
       <input
@@ -72,9 +69,7 @@ export default {
         this.errorMessage = "The title field is required";
         return;
       }
-console.log("New Card:" + this.newCard);
       // Send new card to server
-      console.log("ENtro a res: " + this.newCard.title);
       axios
         .post("/kanban-board/public/cards", this.newCard)
         .then(res => {

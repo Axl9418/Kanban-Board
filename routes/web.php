@@ -30,7 +30,8 @@ Route::get('cards', [CardsController::class, 'index'])->name('cards.index');
 Route::middleware(['cors'])->group(function () {
     Route::post('cards', [CardsController::class, 'store'])->name('cards.store');
     Route::put('/cards/sync', [CardsController::class, 'sync'])->name('cards.sync');
-    //Route::put('/cards/{card}', [CardsController::class, 'update'])->name('cards.update');
+
+    Route::post('/columns', [ColumnsController::class, 'store'])->name('columns.store');
 });
 
 
