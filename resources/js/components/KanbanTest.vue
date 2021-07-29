@@ -109,10 +109,16 @@ export default {
       const columnIndex = this.columns.findIndex(
         column => column.id === newCard.columns_id
       );
+
+      if(typeof this.columns[columnIndex].cards ==='undefined') {
+        //For first card on column
+        this.columns[columnIndex]=[].push(newCard);
+        location.reload();
+      }else{
  
       // Add newly created card to our column
       this.columns[columnIndex].cards.push(newCard);
-
+      }
       // Reset and close the AddTaskForm
       this.closeAddCard();
     },
