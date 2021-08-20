@@ -13,7 +13,8 @@
 
         <div id="app" class="container">
             <h1>Kanban Board</h1>
-            <kanban-test initial-data="{{$columns }}"></kanban-test>
+            <k-test initial-data="{{$columns }}"></k-test>
+            <!--kanban-test initial-data="{{$columns }}"></kanban-test-->
         </div>
 
         <script src="{{ asset('js/app.js') }}"></script>

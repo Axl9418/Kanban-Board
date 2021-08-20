@@ -1,7 +1,8 @@
 <template>
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col form-inline">
+<div class="container py-5">
+
+    <!--Add Column-->
+    <div class="">
         <form @submit.prevent="handleAddNewColumn">
           <div>
             <input class="" type="text" placeholder="Enter a title" v-model.trim="newColumn.title">
@@ -15,11 +16,13 @@
             </div>            
           </div>
         </form>
-      </div>
     </div>
-    <div class="row mt-5">
-      <div v-for="column in columns" :key="column.slug" class="col-3">
-        <div class="p-2 alert alert-primary">
+
+  <div class="row">
+    <!-- Start lane -->
+    <div v-for="column in columns" :key="column.slug" class="col-12 col-lg-4">
+      <div class="card mb-3">
+        <div class="card-header bg-light">
           <form @submit.prevent="handleDeleteColumn(column.id)">
             <div class="float-sm-right">            
                 <button class="btn btn-danger">
@@ -27,34 +30,41 @@
                 </button>            
             </div>
           </form>
-
-          <h3>{{ column.title }}</h3>
-
-          <button class="" @click="openAddCard(column.id)">
-            Add Card
-          </button>
-
-          <AddCard
-              v-if="newCardForColumn === column.id"
-              :column-id="column.id"
-              v-on:card-added="handleCardAdded"
-              v-on:card-canceled="closeAddCard"
-          />
+          <h3 class="card-title h5 mb-1">
+            {{ column.title }}
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="tasks">
+            <!-- Start card -->
             <draggable
               class="flex-1 overflow-hidden"
               v-model="column.cards"
               v-bind="cardDragOptions"
               @end="handleCardMoved"
             >
-            <div v-for="card in column.cards" :key="card.id" class="list-group-item">
-              {{ card.title }}
+            <div v-for="card in column.cards" :key="card.id" class="card mb-3 cursor-grab list-group-item">
+              <div class="card-body">
+                <p class="mb-0">{{ card.title }}</p>                
+              </div>
             </div>
-          </draggable>
+            </draggable>
+            <!-- End card -->
+          </div>
+          <button class="btn btn-primary btn-block" @click="openAddCard(column.id)">Add Card</button>
+            <AddCard
+                v-if="newCardForColumn === column.id"
+                :column-id="column.id"
+                v-on:card-added="handleCardAdded"
+                v-on:card-canceled="closeAddCard"
+            />
         </div>
       </div>
-
     </div>
+    <!-- End lane -->
+
   </div>
+</div>
 </template>
 
 <script>
@@ -143,6 +153,8 @@ export default {
       .catch(err => {
         console.log(err.response);
       });
+      //Reset input
+      this.newColumn.title = "";
     },
     handleDeleteColumn(columnId) {
       axios.delete("/kanban-board/public/columns/del/" + columnId)
@@ -164,7 +176,11 @@ export default {
 
 <style>
 /* light stylings for the kanban columns */
-.kanban-column {
+/*.kanban-column {
   min-height: 300px;
+}*/
+.cursor-grab {
+  cursor: -webkit-grab;
+  cursor: grab;
 }
 </style>

@@ -21,7 +21,8 @@ window.Vue = require('vue').default;
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
-Vue.component("kanban-test", require("./components/KanbanTest.vue").default);
+//Vue.component("kanban-test", require("./components/KanbanTest.vue").default);
+Vue.component("k-test", require("./components/Test.vue").default);
 Vue.component("add-card", require("./components/AddCard.vue").default);
 
 
